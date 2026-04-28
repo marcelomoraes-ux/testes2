@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Checkout</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --brand: #2d5f3f;
+    --brand-dark: #1f4a2e;
+    --brand-light: #f0f7ec;
+    --accent: #d4a017;
+    --danger: #d83646;
+    --text: #1a1a1a;
+    --text-soft: #5a5a5a;
+    --text-mute: #888;
+    --border: #e1e1e1;
+    --border-soft: #ececec;
+    --bg-soft: #fafafa;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--text);
+    background: #fff;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: #1773b0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* TOP PROMO BAR */
+  .promo-bar {
+    background: var(--text);
+    color: #fff;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .promo-bar .promo-text { display: inline-flex; align-items: center; gap: 8px; }
+  .promo-bar .promo-icon { color: var(--accent); }
+  .promo-bar .promo-divider { width: 1px; height: 14px; background: rgba(255,255,255,0.25); }
+  .promo-bar .promo-timer {
+    background: rgba(255,255,255,0.12);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .checkout-wrapper { display: flex; min-height: calc(100vh - 40px); }
+
+  /* LEFT SIDE */
+  .checkout-main {
+    flex: 1;
+    background: #fff;
+    padding: 36px 56px;
+    max-width: 600px;
+    margin-left: auto;
+  }
+
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+  }
+  .logo {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--brand);
+    letter-spacing: -0.5px;
+  }
+  .secure-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-soft);
+    background: var(--brand-light);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 500;
+  }
+  .secure-pill svg { color: var(--brand); }
+
+  /* URGENCY BAR */
+  .urgency-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border: 1px solid #b8d4b8;
+    border-radius: 8px;
+    background: var(--brand-light);
+    margin-bottom: 22px;
+    font-size: 14px;
+    text-align: center;
+  }
+  .urgency-text { color: var(--text); }
+  .urgency-timer {
+    color: var(--danger);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    margin-left: 4px;
+  }
+
+  /* PROGRESS STEPS */
+  .progress-steps {
+    display: flex;
+    align-items: center;
+    margin-bottom: 28px;
+    font-size: 13px;
+  }
+  .step { display: inline-flex; align-items: center; gap: 8px; color: var(--text-mute); }
+  .step.done { color: var(--brand); }
+  .step.current { color: var(--text); font-weight: 600; }
+  .step-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    color: var(--text-mute);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .step.done .step-num { background: var(--brand); color: #fff; }
+  .step.current .step-num { background: var(--text); color: #fff; }
+  .step-line { flex: 1; height: 2px; background: var(--border); margin: 0 12px; }
+  .step-line.active { background: var(--brand); }
+
+  /* EXPRESS */
+  .express-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .express-btn {
+    height: 46px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    color: #fff;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.15s ease;
+  }
+  .express-btn:hover { opacity: 0.9; }
+  .btn-shop { background: #5a31f4; }
+  .btn-paypal { background: #ffc439; color: #003087; }
+  .btn-gpay { background: #000; }
+
+  .divider {
+    text-align: center;
+    margin: 22px 0 24px;
+    position: relative;
+    color: var(--text-mute);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .divider::before, .divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 42%;
+    height: 1px;
+    background: var(--border);
+  }
+  .divider::before { left: 0; }
+  .divider::after { right: 0; }
+
+  .section { margin-bottom: 26px; }
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+  }
+  .section-title { font-size: 17px; font-weight: 600; color: var(--text); }
+  .section-link { font-size: 13px; }
+
+  .form-row { display: flex; gap: 10px; margin-bottom: 10px; }
+  .form-row > * { flex: 1; }
+
+  .input-group { position: relative; margin-bottom: 10px; }
+  .input-group label {
+    position: absolute;
+    top: 14px;
+    left: 12px;
+    color: var(--text-mute);
+    font-size: 14px;
+    pointer-events: none;
+    transition: all 0.15s ease;
+    background: #fff;
+    padding: 0 4px;
+  }
+  .input-group input:focus + label,
+  .input-group input:not(:placeholder-shown) + label,
+  .input-group select:focus + label,
+  .input-group select:valid + label {
+    top: -7px;
+    font-size: 11px;
+    color: var(--brand);
+  }
+  .input-group input,
+  .input-group select {
+    width: 100%;
+    height: 48px;
+    padding: 0 12px;
+    border: 1px solid #c9cccf;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    background: #fff;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .input-group input:focus,
+  .input-group select:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(45,95,63,0.12);
+  }
+
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0 16px;
+    font-size: 14px;
+    color: var(--text-soft);
+  }
+  .checkbox-row input { width: 16px; height: 16px; cursor: pointer; accent-color: var(--brand); }
+
+  .shipping-method {
+    border: 1px solid #c9cccf;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .ship-option {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .ship-option:hover { background: #fafafa; }
+  .ship-option:last-child { border-bottom: none; }
+  .ship-option.selected { background: var(--brand-light); }
+  .ship-option input[type=radio] { margin-right: 12px; accent-color: var(--brand); }
+  .ship-option .label { flex: 1; }
+  .ship-option .price { font-weight: 600; }
+  .ship-option .price.free { color: var(--brand); }
+
+  /* PAYMENT */
+  .payment-section {
+    border: 1px solid #c9cccf;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .pay-header {
+    background: var(--brand-light);
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--brand);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .pay-header input[type=radio] { width: 16px; height: 16px; accent-color: var(--brand); }
+  .pay-header .pay-label { flex: 1; font-weight: 500; }
+  .card-icons { display: flex; gap: 4px; }
+  .card-icon {
+    width: 34px;
+    height: 22px;
+    border-radius: 3px;
+    background: #fff;
+    border: 1px solid #ddd;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    color: #555;
+  }
+  .pay-body { padding: 16px; background: #fbfbfb; }
+
+  .pay-now-btn {
+    width: 100%;
+    height: 56px;
+    background: var(--brand);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 24px;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.15s ease, transform 0.05s ease;
+    box-shadow: 0 2px 8px rgba(45,95,63,0.18);
+  }
+  .pay-now-btn:hover { background: var(--brand-dark); }
+  .pay-now-btn:active { transform: translateY(1px); }
+
+  .trust-row {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--text-mute);
+    flex-wrap: wrap;
+  }
+  .trust-row span { display: inline-flex; align-items: center; gap: 4px; }
+
+  .footer-links {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    flex-wrap: wrap;
+  }
+
+  /* RIGHT SIDE - SUMMARY */
+  .checkout-summary {
+    flex: 1;
+    background: var(--bg-soft);
+    border-left: 1px solid var(--border);
+    padding: 36px 56px;
+    max-width: 540px;
+  }
+
+  .summary-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-soft);
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .summary-header .pill { display: inline-flex; align-items: center; gap: 4px; }
+
+  .products-scroll {
+    position: relative;
+    max-height: 360px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 4px 12px 50px 4px;
+    margin: 0 -4px 8px -4px;
+  }
+  .products-scroll::-webkit-scrollbar { width: 6px; }
+  .products-scroll::-webkit-scrollbar-track { background: #eee; border-radius: 3px; }
+  .products-scroll::-webkit-scrollbar-thumb { background: #bbb; border-radius: 3px; }
+
+  .scroll-hint {
+    position: sticky;
+    bottom: 4px;
+    margin: 0 auto;
+    width: fit-content;
+    background: rgba(40, 40, 40, 0.92);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.2s ease;
+  }
+
+  .product-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .product-row:last-of-type { border-bottom: none; }
+  .product-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #d4e8d4, #a8c8a8);
+    border: 1px solid #ddd;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .product-img img {
+    border-radius: 7px;
+  }
+  .product-badge {
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    background: var(--text);
+    color: #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .product-info { flex: 1; min-width: 0; padding-right: 8px; }
+  .product-name {
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .product-meta { font-size: 12px; color: var(--text-mute); line-height: 1.5; }
+  .product-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--text-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-top: 2px;
+  }
+  .product-price {
+    font-weight: 500;
+    font-size: 14px;
+    text-align: right;
+    flex-shrink: 0;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+  .price-old {
+    color: #aaa;
+    text-decoration: line-through;
+    font-weight: 400;
+    display: block;
+    font-size: 13px;
+  }
+  .price-free { color: var(--text); font-weight: 600; }
+
+  .discount-row { display: flex; gap: 8px; margin: 18px 0; }
+  .discount-row input {
+    flex: 1;
+    height: 46px;
+    padding: 0 12px;
+    border: 1px solid #c9cccf;
+    border-radius: 6px;
+    font-size: 14px;
+    background: #fff;
+  }
+  .discount-row input:focus { outline: none; border-color: var(--brand); }
+  .discount-row button {
+    padding: 0 22px;
+    background: var(--text);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: opacity 0.15s ease;
+  }
+  .discount-row button:hover { opacity: 0.85; }
+
+  .totals-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 14px;
+    color: var(--text-soft);
+  }
+  .totals-row.savings { color: var(--brand); font-weight: 600; }
+  .totals-row.total {
+    border-top: 1px solid var(--border);
+    margin-top: 12px;
+    padding-top: 18px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .totals-row .currency { font-size: 12px; color: var(--text-mute); margin-right: 4px; }
+
+  /* UPSELL CARDS - INLINE NA LISTA */
+  .upsell-list-inline {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 18px;
+    border-top: 1px dashed #d4d4d4;
+    position: relative;
+  }
+  .upsell-list-inline::before {
+    content: "RECOMMENDED ADD-ONS";
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-soft);
+    padding: 0 10px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-mute);
+    letter-spacing: 1.5px;
+  }
+  .upsell-list-inline .upsell-card {
+    padding: 12px;
+    border-radius: 10px;
+  }
+  .upsell-list-inline .upsell-top {
+    margin-bottom: 10px;
+  }
+  .upsell-list-inline .upsell-headline {
+    font-size: 12px;
+  }
+  .upsell-list-inline .upsell-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+    border-radius: 8px;
+  }
+  .upsell-list-inline .upsell-detail-title {
+    font-size: 12px;
+  }
+  .upsell-list-inline .upsell-detail-text {
+    font-size: 11px;
+  }
+
+  /* UPSELL CARDS */
+  .upsell-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .upsell-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  .upsell-card:hover { border-color: #b8b8b8; }
+  .upsell-card.selected {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 2px rgba(45,95,63,0.12);
+    background: #fcfdfb;
+  }
+  .upsell-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .upsell-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #c9cccf;
+    border-radius: 5px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    transition: all 0.15s ease;
+  }
+  .upsell-card.selected .upsell-checkbox {
+    background: var(--brand);
+    border-color: var(--brand);
+  }
+  .upsell-checkbox svg {
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+  .upsell-card.selected .upsell-checkbox svg { opacity: 1; }
+  .upsell-headline {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .upsell-headline .price {
+    color: var(--brand);
+    font-weight: 700;
+  }
+  .upsell-bottom {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding-left: 0;
+  }
+  .upsell-icon {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+  }
+  .upsell-icon.shipping { background: #fff4e6; }
+  .upsell-icon.protection { background: #fff8e1; }
+  .upsell-icon.lifetime { background: var(--brand-light); }
+  .upsell-detail { flex: 1; min-width: 0; }
+  .upsell-detail-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .upsell-detail-text {
+    font-size: 12px;
+    color: var(--text-soft);
+    line-height: 1.5;
+  }
+
+  /* TESTIMONIAL */
+  .testimonial {
+    margin-top: 22px;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .stars { color: var(--accent); font-size: 14px; letter-spacing: 1px; margin-bottom: 6px; }
+  .testimonial-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+  .testimonial-author {
+    font-size: 12px;
+    color: var(--text-mute);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .verified-pill {
+    background: var(--brand-light);
+    color: var(--brand);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  /* GUARANTEE */
+  .guarantee-box {
+    margin-top: 16px;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .guarantee-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    background: var(--brand-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand);
+  }
+  .guarantee-content { font-size: 13px; }
+  .guarantee-content strong { color: var(--text); display: block; margin-bottom: 2px; }
+  .guarantee-content span { color: var(--text-mute); }
+
+  /* BADGES */
+  .security-badges {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    height: 32px;
+    padding: 0 10px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-soft);
+  }
+  .badge svg { color: var(--brand); }
+
+  @media (max-width: 900px) {
+    .checkout-wrapper { flex-direction: column-reverse; }
+    .checkout-main, .checkout-summary {
+      max-width: 100%;
+      padding: 24px;
+    }
+    .checkout-summary { border-left: none; border-bottom: 1px solid var(--border); }
+    .promo-bar { font-size: 12px; gap: 8px; padding: 8px 12px; }
+    .promo-bar .promo-divider { display: none; }
+    .header-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP PROMO BAR -->
+<div class="promo-bar">
+  <span class="promo-text">
+    <span class="promo-icon">🎁</span>
+    Free Doctor Consultation + Free Gifts Included
+  </span>
+  <span class="promo-divider"></span>
+  <span class="promo-text">
+    Offer ends in
+    <span class="promo-timer" id="promoTimer">09:50</span>
+  </span>
+</div>
+
+<div class="checkout-wrapper">
+
+  <!-- LEFT: FORM -->
+  <div class="checkout-main">
+
+    <div class="header-row">
+      <div class="logo">YourBrand</div>
+      <div class="secure-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Secure Checkout · 256-bit SSL
+      </div>
+    </div>
+
+    <!-- Urgency -->
+    <div class="urgency-banner">
+      <span class="urgency-text">Limited Stock – Your items reserved for the next:</span>
+      <span class="urgency-timer" id="cartTimer">14:57</span>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-steps">
+      <span class="step done"><span class="step-num">✓</span>Cart</span>
+      <span class="step-line active"></span>
+      <span class="step current"><span class="step-num">2</span>Information</span>
+      <span class="step-line"></span>
+      <span class="step"><span class="step-num">3</span>Payment</span>
+    </div>
+
+    <!-- Express checkout -->
+    <div class="express-buttons">
+      <button class="express-btn btn-shop">shop Pay</button>
+      <button class="express-btn btn-paypal">PayPal</button>
+      <button class="express-btn btn-gpay">G Pay</button>
+    </div>
+
+    <div class="divider">Or pay with card</div>
+
+    <!-- Contact -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Contact</div>
+        <a href="#" class="section-link">Log in</a>
+      </div>
+      <div class="input-group">
+        <input type="email" id="email" placeholder=" " required>
+        <label for="email">Email</label>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="news" checked>
+        <label for="news">Email me with news and exclusive offers</label>
+      </div>
+    </div>
+
+    <!-- Delivery -->
+    <div class="section">
+      <div class="section-title" style="margin-bottom:14px;">Shipping address</div>
+
+      <div class="input-group">
+        <select id="country" required>
+          <option value="" disabled selected></option>
+          <option>United States</option>
+          <option>Canada</option>
+          <option>United Kingdom</option>
+          <option>Brazil</option>
+          <option>Australia</option>
+        </select>
+        <label for="country">Country / Region</label>
+      </div>
+
+      <div class="form-row">
+        <div class="input-group">
+          <input type="text" id="fname" placeholder=" " required>
+          <label for="fname">First name</label>
+        </div>
+        <div class="input-group">
+          <input type="text" id="lname" placeholder=" " required>
+          <label for="lname">Last name</label>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <input type="text" id="address" placeholder=" " required>
+        <label for="address">Address</label>
+      </div>
+
+      <div class="input-group">
+        <input type="text" id="apt" placeholder=" ">
+        <label for="apt">Apartment, suite, etc. (optional)</label>
+      </div>
+
+      <div class="form-row">
+        <div class="input-group">
+          <input type="text" id="city" placeholder=" " required>
+          <label for="city">City</label>
+        </div>
+        <div class="input-group">
+          <select id="state" required>
+            <option value="" disabled selected></option>
+            <option>California</option>
+            <option>Texas</option>
+            <option>New York</option>
+            <option>Florida</option>
+          </select>
+          <label for="state">State</label>
+        </div>
+        <div class="input-group">
+          <input type="text" id="zip" placeholder=" " required>
+          <label for="zip">ZIP code</label>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <input type="tel" id="phone" placeholder=" ">
+        <label for="phone">Phone (optional)</label>
+      </div>
+    </div>
+
+    <!-- Payment -->
+    <div class="section">
+      <div class="section-title" style="margin-bottom:4px;">Payment</div>
+      <div style="font-size:12px;color:var(--text-mute);margin-bottom:14px;display:flex;align-items:center;gap:6px;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        All transactions are encrypted and securely processed.
+      </div>
+
+      <div class="payment-section">
+        <div class="pay-header">
+          <input type="radio" name="pay" checked>
+          <span class="pay-label">Credit / Debit Card</span>
+          <div class="card-icons">
+            <span class="card-icon" style="color:#1a1f71;">VISA</span>
+            <span class="card-icon" style="color:#eb001b;">MC</span>
+            <span class="card-icon" style="color:#006fcf;">AMEX</span>
+            <span class="card-icon" style="color:#ff6000;">DISC</span>
+          </div>
+        </div>
+        <div class="pay-body">
+          <div class="input-group">
+            <input type="text" id="cardnum" placeholder=" ">
+            <label for="cardnum">Card number</label>
+          </div>
+          <div class="form-row">
+            <div class="input-group">
+              <input type="text" id="exp" placeholder=" ">
+              <label for="exp">Expiration (MM / YY)</label>
+            </div>
+            <div class="input-group">
+              <input type="text" id="cvv" placeholder=" ">
+              <label for="cvv">Security code (CVV)</label>
+            </div>
+          </div>
+          <div class="input-group">
+            <input type="text" id="cardname" placeholder=" ">
+            <label for="cardname">Name on card</label>
+          </div>
+          <div class="checkbox-row">
+            <input type="checkbox" id="billsame" checked>
+            <label for="billsame">Use shipping address as billing address</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="pay-now-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Complete Secure Purchase · $107.87
+    </button>
+
+    <div class="trust-row">
+      <span>🔒 SSL Encrypted</span>
+      <span>✓ 60-Day Guarantee</span>
+      <span>📦 Free Shipping</span>
+    </div>
+
+    <div class="footer-links">
+      <a href="#">Refund policy</a>
+      <a href="#">Shipping policy</a>
+      <a href="#">Privacy policy</a>
+      <a href="#">Terms of service</a>
+      <a href="#">Contact us</a>
+    </div>
+  </div>
+
+  <!-- RIGHT: ORDER SUMMARY -->
+  <div class="checkout-summary">
+
+    <div class="summary-header">
+      <span class="pill">🚚 Ships in 1–2 business days</span>
+      <span>·</span>
+      <span class="pill">🔒 Secure checkout</span>
+    </div>
+
+    <div class="products-scroll">
+
+      <div class="product-row">
+        <div class="product-img" style="background:#fff;padding:0;overflow:hidden;">
+          <img src="jellylean-product.png" alt="JellyLean" style="width:100%;height:100%;object-fit:contain;">
+          <span class="product-badge">1</span>
+        </div>
+        <div class="product-info">
+          <div class="product-name">JellyLean Apple Cider Vinegar Gummies</div>
+          <div class="product-meta">BUY 3 GET 2 FREE</div>
+          <div class="product-meta">Delivery every month</div>
+          <div class="product-tag">🎁 FREE EBOOKS BUNDLE</div>
+        </div>
+        <div class="product-price">$107.87</div>
+      </div>
+
+      <div class="product-row">
+        <div class="product-img" style="background:linear-gradient(135deg,#d8e4cc,#9bb88a);"><span class="product-badge">1</span></div>
+        <div class="product-info">
+          <div class="product-name">7-Day Fat-Burning Meal Plan</div>
+          <div class="product-meta">$15.00</div>
+          <div class="product-tag">📘 FREE EBOOK (-$15.00)</div>
+        </div>
+        <div class="product-price">
+          <span class="price-old">$15.00</span>
+          <span class="price-free">FREE</span>
+        </div>
+      </div>
+
+      <div class="product-row">
+        <div class="product-img" style="background:linear-gradient(135deg,#c8e0d4,#7ba894);"><span class="product-badge">1</span></div>
+        <div class="product-info">
+          <div class="product-name">Belly Fat Blueprint: Lose 10lbs in 30 Days</div>
+          <div class="product-tag">📘 FREE EBOOK</div>
+        </div>
+        <div class="product-price">
+          <span class="price-old">$19.95</span>
+          <span class="price-free">FREE</span>
+        </div>
+      </div>
+
+      <div class="product-row">
+        <div class="product-img" style="background:linear-gradient(135deg,#dde8c8,#a5b87a);"><span class="product-badge">1</span></div>
+        <div class="product-info">
+          <div class="product-name">Smoothie Detox Recipes for Rapid Weight Loss</div>
+          <div class="product-tag">📘 FREE EBOOK</div>
+        </div>
+        <div class="product-price">
+          <span class="price-old">$12.95</span>
+          <span class="price-free">FREE</span>
+        </div>
+      </div>
+
+      <div class="product-row">
+        <div class="product-img" style="background:linear-gradient(135deg,#f0d8b8,#c9a878);"><span class="product-badge">1</span></div>
+        <div class="product-info">
+          <div class="product-name">Metabolism Reset: Burn Fat 24/7</div>
+          <div class="product-tag">📘 FREE EBOOK</div>
+        </div>
+        <div class="product-price">
+          <span class="price-old">$9.95</span>
+          <span class="price-free">FREE</span>
+        </div>
+      </div>
+
+      <div class="scroll-hint">Scroll for more items ↓</div>
+    </div>
+
+    <!-- Upsell offers -->
+    <div class="upsell-list" style="margin-top:22px;">
+
+      <div class="upsell-card selected" data-upsell="shipping">
+        <div class="upsell-top">
+          <div class="upsell-checkbox">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </div>
+          <div class="upsell-headline">
+            Yes, I want Expedited Shipping for ONLY <span class="price">$4.67</span> and receive my order in 1–3 days.
+          </div>
+        </div>
+        <div class="upsell-bottom">
+          <div class="upsell-icon shipping">🚚</div>
+          <div class="upsell-detail">
+            <div class="upsell-detail-title">Expedited Shipping:</div>
+            <div class="upsell-detail-text">Want express shipping with your order? Select the Expedited Shipping option for just $4.67 to get your order delivered in 1–3 days.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="upsell-card selected" data-upsell="protection">
+        <div class="upsell-top">
+          <div class="upsell-checkbox">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </div>
+          <div class="upsell-headline">
+            Yes, I want to add Full Package Protection for ONLY <span class="price">$4.97</span>.
+          </div>
+        </div>
+        <div class="upsell-bottom">
+          <div class="upsell-icon protection">📦</div>
+          <div class="upsell-detail">
+            <div class="upsell-detail-title">Full Package Protection:</div>
+            <div class="upsell-detail-text">Safeguard your order against damage, loss, or theft during shipping.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="upsell-card selected" data-upsell="lifetime">
+        <div class="upsell-top">
+          <div class="upsell-checkbox">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </div>
+          <div class="upsell-headline">
+            Yes, I want Extended Lifetime Protection for ONLY <span class="price">$9.97</span>
+          </div>
+        </div>
+        <div class="upsell-bottom">
+          <div class="upsell-icon lifetime">🛡️</div>
+          <div class="upsell-detail">
+            <div class="upsell-detail-title">1-Year Extended Lifetime Protection:</div>
+            <div class="upsell-detail-text">If your product shows any material or manufacturing defects within one year, we'll replace it free of charge.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="discount-row">
+      <input type="text" placeholder="Discount code or gift card">
+      <button>Apply</button>
+    </div>
+
+    <div class="totals-row">
+      <span>Subtotal</span>
+      <span><span class="currency">USD</span>$145.77</span>
+    </div>
+    <div class="totals-row savings">
+      <span>Bonuses &amp; Gifts</span>
+      <span>−$37.90</span>
+    </div>
+    <div class="totals-row">
+      <span>Shipping</span>
+      <span style="color:var(--brand);font-weight:600;">FREE</span>
+    </div>
+    <div class="totals-row">
+      <span>Estimated taxes</span>
+      <span><span class="currency">USD</span>$0.00</span>
+    </div>
+
+    <div class="totals-row total">
+      <span>Total</span>
+      <span><span class="currency" style="font-size:14px;">USD</span>$107.87</span>
+    </div>
+
+    <!-- Testimonial -->
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"Best decision I've made for my health. Real results in just three weeks — energy is way up and I sleep so much better."</div>
+      <div class="testimonial-author">
+        — Sarah M.
+        <span class="verified-pill">✓ Verified</span>
+      </div>
+    </div>
+
+    <!-- Guarantee -->
+    <div class="guarantee-box">
+      <div class="guarantee-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+      </div>
+      <div class="guarantee-content">
+        <strong>60-Day Money-Back Guarantee</strong>
+        <span>Not satisfied? Full refund — no questions asked.</span>
+      </div>
+    </div>
+
+    <!-- Security badges -->
+    <div class="security-badges">
+      <span class="badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        SSL SECURE
+      </span>
+      <span class="badge">PCI DSS</span>
+      <span class="badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        VERIFIED
+      </span>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  // Promo timer
+  (function() {
+    const el = document.getElementById('promoTimer');
+    if (!el) return;
+    let total = 9 * 60 + 50;
+    const tick = () => {
+      const m = Math.floor(total / 60);
+      const s = total % 60;
+      el.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+      if (total > 0) total--;
+    };
+    tick();
+    setInterval(tick, 1000);
+  })();
+
+  // Cart reservation timer
+  (function() {
+    const el = document.getElementById('cartTimer');
+    if (!el) return;
+    let total = 14 * 60 + 57;
+    const tick = () => {
+      const m = Math.floor(total / 60);
+      const s = total % 60;
+      el.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+      if (total > 0) total--;
+    };
+    tick();
+    setInterval(tick, 1000);
+  })();
+
+  // Hide scroll hint at end
+  const scrollEl = document.querySelector('.products-scroll');
+  const hint = document.querySelector('.scroll-hint');
+  if (scrollEl && hint) {
+    const updateHint = () => {
+      const atBottom = scrollEl.scrollTop + scrollEl.clientHeight >= scrollEl.scrollHeight - 4;
+      hint.style.opacity = atBottom ? '0' : '1';
+    };
+    scrollEl.addEventListener('scroll', updateHint);
+    if (scrollEl.scrollHeight <= scrollEl.clientHeight) hint.style.display = 'none';
+  }
+
+  // Shipping method visual selection
+  document.querySelectorAll('.ship-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('.ship-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+    });
+  });
+
+  // Upsell cards toggle (já vêm marcados por padrão)
+  document.querySelectorAll('.upsell-card').forEach(card => {
+    card.addEventListener('click', () => {
+      card.classList.toggle('selected');
+    });
+  });
+</script>
+
+</body>
+</html>
