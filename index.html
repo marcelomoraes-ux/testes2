@@ -7,9 +7,9 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --brand: #2d5f3f;
-    --brand-dark: #1f4a2e;
-    --brand-light: #f0f7ec;
+    --brand: #4a3a2a;
+    --brand-dark: #2e2419;
+    --brand-light: #e8dfd3;
     --accent: #d4a017;
     --danger: #d83646;
     --text: #1a1a1a;
@@ -57,12 +57,39 @@
     color: var(--accent);
   }
 
-  .checkout-wrapper {
+  /* SITE HEADER */
+  .site-header {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
     display: flex;
-    min-height: calc(100vh - 40px);
-    max-width: 1180px;
-    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+    position: relative;
   }
+  .site-header .brand-logo {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    color: #ee5526;
+    text-transform: lowercase;
+    font-style: italic;
+  }
+  .site-header .cart-icon {
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-soft);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: background 0.15s ease;
+  }
+  .site-header .cart-icon:hover { background: #f5f5f5; }
+
+  .checkout-wrapper { display: flex; min-height: calc(100vh - 40px); max-width: 1180px; margin: 0 auto; }
 
   /* LEFT SIDE */
   .checkout-main {
@@ -104,19 +131,102 @@
     justify-content: center;
     gap: 8px;
     padding: 12px 18px;
-    border: 1px solid #b8d4b8;
+    border: 1px solid #f5c6c6;
     border-radius: 8px;
-    background: var(--brand-light);
+    background: #fdecec;
     margin-bottom: 22px;
     font-size: 14px;
     text-align: center;
+    position: relative;
+    animation: urgencyPulse 2s ease-in-out infinite;
   }
-  .urgency-text { color: var(--text); }
+  @keyframes urgencyPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(216, 54, 70, 0.15); }
+    50% { box-shadow: 0 0 0 6px rgba(216, 54, 70, 0); }
+  }
+  .urgency-text { color: #8a1f2a; font-weight: 600; }
   .urgency-timer {
     color: var(--danger);
     font-weight: 700;
     font-variant-numeric: tabular-nums;
     margin-left: 4px;
+    background: #fff;
+    padding: 3px 10px;
+    border-radius: 4px;
+    border: 1px solid #f5c6c6;
+  }
+
+  /* DELIVERY TIMELINE */
+  .delivery-timeline.mobile-only { display: none; }
+  .delivery-timeline {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .timeline-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .timeline-desc {
+    font-size: 13px;
+    color: var(--text-soft);
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .timeline-bar {
+    position: relative;
+    height: 38px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    font-size: 13px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .timeline-bar:last-child { margin-bottom: 0; }
+  .timeline-bar.sold-out {
+    color: var(--text-mute);
+  }
+  .timeline-bar.sold-out .label-left,
+  .timeline-bar.sold-out .label-right {
+    color: var(--text-mute);
+    font-weight: 500;
+  }
+  .timeline-bar .label-left {
+    position: relative;
+    z-index: 2;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .timeline-bar .label-right {
+    position: relative;
+    z-index: 2;
+    margin-left: auto;
+    font-weight: 600;
+    color: var(--text);
+    font-size: 12px;
+  }
+  .timeline-bar.reserved {
+    background: #fff;
+    border-color: #d4c8b6;
+  }
+  .timeline-bar .fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, #d4c8b6, #b8a888);
+    border-radius: 999px 0 0 999px;
+    z-index: 1;
   }
 
   /* PROGRESS STEPS */
@@ -240,7 +350,7 @@
   .input-group input:focus,
   .input-group select:focus {
     border-color: var(--brand);
-    box-shadow: 0 0 0 3px rgba(45,95,63,0.12);
+    box-shadow: 0 0 0 3px rgba(74,58,42,0.15);
   }
 
   .checkbox-row {
@@ -323,7 +433,7 @@
     justify-content: center;
     gap: 8px;
     transition: background 0.15s ease, transform 0.05s ease;
-    box-shadow: 0 2px 8px rgba(45,95,63,0.18);
+    box-shadow: 0 2px 8px rgba(74,58,42,0.2);
   }
   .pay-now-btn:hover { background: var(--brand-dark); }
   .pay-now-btn:active { transform: translateY(1px); }
@@ -371,10 +481,10 @@
 
   .products-scroll {
     position: relative;
-    max-height: 360px;
+    max-height: 480px;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 4px 12px 50px 4px;
+    padding: 4px 12px 4px 4px;
     margin: 0 -4px 8px -4px;
   }
   .products-scroll::-webkit-scrollbar { width: 6px; }
@@ -412,7 +522,7 @@
     width: 60px;
     height: 60px;
     border-radius: 8px;
-    background: linear-gradient(135deg, #d4e8d4, #a8c8a8);
+    background: linear-gradient(135deg, #e8dfd3, #c4b8a8);
     border: 1px solid #ddd;
     position: relative;
     flex-shrink: 0;
@@ -471,6 +581,54 @@
   }
   .price-free { color: var(--text); font-weight: 600; }
 
+  .qty-controls {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 6px;
+    background: #fff;
+  }
+  .qty-btn {
+    width: 28px;
+    height: 26px;
+    border: none;
+    background: #fff;
+    color: var(--text-soft);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease;
+  }
+  .qty-btn:hover { background: #f5f5f5; }
+  .qty-btn:disabled { color: #ccc; cursor: not-allowed; }
+  .qty-btn.qty-plus { border-left: 1px solid #e8e8e8; }
+
+  .product-remove {
+    position: absolute;
+    top: 14px;
+    right: 0;
+    width: 22px;
+    height: 22px;
+    border: none;
+    background: transparent;
+    color: var(--text-mute);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .product-remove:hover { background: #f0f0f0; color: var(--danger); }
+
+  .product-row { position: relative; }
+  .product-info { padding-right: 32px; }
+
   .discount-row { display: flex; gap: 8px; margin: 18px 0; }
   .discount-row input {
     flex: 1;
@@ -512,6 +670,29 @@
     color: var(--text);
   }
   .totals-row .currency { font-size: 12px; color: var(--text-mute); margin-right: 4px; }
+
+  .savings-banner {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: #e6f4ea;
+    border: 1px solid #b8dcc4;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #137a36;
+  }
+  .savings-banner .savings-icon {
+    font-size: 18px;
+  }
+  .savings-banner .savings-amount {
+    margin-left: auto;
+    font-size: 15px;
+    font-weight: 700;
+    color: #137a36;
+  }
 
   /* UPSELL CARDS - INLINE NA LISTA */
   .upsell-list-inline {
@@ -577,7 +758,7 @@
   .upsell-card:hover { border-color: #b8b8b8; }
   .upsell-card.selected {
     border-color: var(--brand);
-    box-shadow: 0 0 0 2px rgba(45,95,63,0.12);
+    box-shadow: 0 0 0 2px rgba(74,58,42,0.15);
     background: #fcfdfb;
   }
   .upsell-top {
@@ -636,8 +817,8 @@
     justify-content: center;
     font-size: 28px;
   }
-  .upsell-icon.shipping { background: #fff4e6; }
-  .upsell-icon.protection { background: #fff8e1; }
+  .upsell-icon.shipping { background: #f4ede0; }
+  .upsell-icon.protection { background: #efe6d4; }
   .upsell-icon.lifetime { background: var(--brand-light); }
   .upsell-detail { flex: 1; min-width: 0; }
   .upsell-detail-title {
@@ -650,6 +831,86 @@
     font-size: 12px;
     color: var(--text-soft);
     line-height: 1.5;
+  }
+
+  /* INCLUDED WITH ORDER */
+  .included-section {
+    margin-top: 12px;
+    padding: 18px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    position: relative;
+  }
+  .included-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .included-title::before {
+    content: "🎁";
+    font-size: 16px;
+  }
+  .included-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .included-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .included-row:first-of-type { padding-top: 0; }
+  .included-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+  .included-icon.consult { background: #efe6d4; }
+  .included-icon.shipping { background: #f4ede0; }
+  .included-icon.support { background: var(--brand-light); }
+  .included-info { flex: 1; min-width: 0; }
+  .included-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .included-tag {
+    display: inline-block;
+    background: #d4f5dd;
+    color: #137a36;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.3px;
+  }
+  .included-price {
+    text-align: right;
+    flex-shrink: 0;
+    line-height: 1.3;
+  }
+  .included-price .free {
+    color: var(--brand);
+    font-weight: 700;
+    font-size: 14px;
+    display: block;
+  }
+  .included-price .old {
+    color: #aaa;
+    text-decoration: line-through;
+    font-size: 12px;
+    display: block;
   }
 
   /* TESTIMONIAL */
@@ -746,6 +1007,9 @@
   @media (max-width: 900px) {
     body { font-size: 14px; }
 
+    .delivery-timeline.desktop-only { display: none; }
+    .delivery-timeline.mobile-only { display: block; }
+
     .checkout-wrapper {
       flex-direction: column-reverse;
       max-width: 100%;
@@ -767,6 +1031,11 @@
     }
     .promo-bar .promo-divider { display: none; }
     .promo-bar .promo-timer { padding: 3px 8px; font-size: 11px; }
+
+    /* Site header */
+    .site-header { padding: 14px 16px; }
+    .site-header .brand-logo { font-size: 18px; letter-spacing: 3px; }
+    .site-header .cart-icon { right: 16px; }
 
     /* Header */
     .header-row {
@@ -892,32 +1161,32 @@
   </span>
 </div>
 
+<!-- SITE HEADER -->
+<div class="site-header">
+  <div class="brand-logo">jellylean</div>
+  <div class="cart-icon" aria-label="Cart">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <path d="M16 10a4 4 0 0 1-8 0"/>
+    </svg>
+  </div>
+</div>
+
 <div class="checkout-wrapper">
 
   <!-- LEFT: FORM -->
   <div class="checkout-main">
 
-    <div class="header-row">
-      <div class="logo">YourBrand</div>
-      <div class="secure-pill">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Secure Checkout · 256-bit SSL
-      </div>
-    </div>
-
     <!-- Urgency -->
     <div class="urgency-banner">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+        <path d="M12 2L1 21h22L12 2z" fill="#d83646"/>
+        <rect x="11" y="9" width="2" height="6" fill="#fff"/>
+        <rect x="11" y="16" width="2" height="2" fill="#fff"/>
+      </svg>
       <span class="urgency-text">Limited Stock – Your items reserved for the next:</span>
       <span class="urgency-timer" id="cartTimer">14:57</span>
-    </div>
-
-    <!-- Progress -->
-    <div class="progress-steps">
-      <span class="step done"><span class="step-num">✓</span>Cart</span>
-      <span class="step-line active"></span>
-      <span class="step current"><span class="step-num">2</span>Information</span>
-      <span class="step-line"></span>
-      <span class="step"><span class="step-num">3</span>Payment</span>
     </div>
 
     <!-- Express checkout -->
@@ -931,10 +1200,7 @@
 
     <!-- Contact -->
     <div class="section">
-      <div class="section-header">
-        <div class="section-title">Contact</div>
-        <a href="#" class="section-link">Log in</a>
-      </div>
+      <div class="section-title" style="margin-bottom:14px;">Contact</div>
       <div class="input-group">
         <input type="email" id="email" placeholder=" " required>
         <label for="email">Email</label>
@@ -1009,6 +1275,21 @@
       </div>
     </div>
 
+    <!-- Delivery Timeline (mobile only - aparece entre Shipping e Payment) -->
+    <div class="delivery-timeline mobile-only" style="margin-bottom:24px;">
+      <div class="timeline-title">Your Delivery Timeline: next batch ships <span id="nextBatchTitleMobile">May 17th</span></div>
+      <div class="timeline-desc">Due to high demand, our current batch is sold out. Order now and secure yours from the next shipment.</div>
+      <div class="timeline-bar sold-out">
+        <span class="label-left" id="currentBatchDateMobile">April 16th</span>
+        <span class="label-right">SOLD OUT</span>
+      </div>
+      <div class="timeline-bar reserved">
+        <div class="fill" style="width:93%;"></div>
+        <span class="label-left" id="nextBatchDateMobile">May 17th</span>
+        <span class="label-right">93% Reserved</span>
+      </div>
+    </div>
+
     <!-- Payment -->
     <div class="section">
       <div class="section-title" style="margin-bottom:4px;">Payment</div>
@@ -1057,7 +1338,7 @@
 
     <button class="pay-now-btn">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      Complete Secure Purchase · $107.87
+      Complete Secure Purchase · $49.00
     </button>
 
     <div class="trust-row">
@@ -1078,134 +1359,106 @@
   <!-- RIGHT: ORDER SUMMARY -->
   <div class="checkout-summary">
 
-    <div class="summary-header">
-      <span class="pill">🚚 Ships in 1–2 business days</span>
-      <span>·</span>
-      <span class="pill">🔒 Secure checkout</span>
-    </div>
-
     <div class="products-scroll">
 
-      <div class="product-row">
+      <div class="product-row" data-qty="6">
         <div class="product-img" style="background:#fff;padding:0;overflow:hidden;">
           <img src="jellylean-product.png" alt="JellyLean" style="width:100%;height:100%;object-fit:contain;">
-          <span class="product-badge">1</span>
+          <span class="product-badge">6</span>
         </div>
         <div class="product-info">
           <div class="product-name">JellyLean Apple Cider Vinegar Gummies</div>
-          <div class="product-meta">BUY 3 GET 2 FREE</div>
-          <div class="product-meta">Delivery every month</div>
-          <div class="product-tag">🎁 FREE EBOOKS BUNDLE</div>
+          <div class="product-meta"><strong style="color:var(--brand);">BUY 3 GET 3 FREE</strong></div>
+          <div class="product-meta">6 bottles · 30 gummies each</div>
+          <div class="qty-controls">
+            <button class="qty-btn qty-minus" aria-label="Decrease quantity">−</button>
+            <button class="qty-btn qty-plus" aria-label="Increase quantity">+</button>
+          </div>
         </div>
-        <div class="product-price">$107.87</div>
+        <div class="product-price">
+          <span style="color:var(--text);">$49.00</span>
+          <span class="price-old">$294.00</span>
+        </div>
+        <button class="product-remove" aria-label="Remove item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
 
-      <div class="product-row">
-        <div class="product-img" style="background:linear-gradient(135deg,#d8e4cc,#9bb88a);"><span class="product-badge">1</span></div>
+      <div class="product-row" data-qty="1">
+        <div class="product-img" style="background:linear-gradient(135deg,#f0e6d6,#c8b89c);"><span class="product-badge">1</span></div>
         <div class="product-info">
           <div class="product-name">7-Day Fat-Burning Meal Plan</div>
-          <div class="product-meta">$15.00</div>
-          <div class="product-tag">📘 FREE EBOOK (-$15.00)</div>
+          <div class="qty-controls">
+            <button class="qty-btn qty-minus" aria-label="Decrease quantity">−</button>
+            <button class="qty-btn qty-plus" aria-label="Increase quantity">+</button>
+          </div>
         </div>
         <div class="product-price">
-          <span class="price-old">$15.00</span>
           <span class="price-free">FREE</span>
+          <span class="price-old">$15.00</span>
         </div>
+        <button class="product-remove" aria-label="Remove item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
 
-      <div class="product-row">
-        <div class="product-img" style="background:linear-gradient(135deg,#c8e0d4,#7ba894);"><span class="product-badge">1</span></div>
+      <div class="product-row" data-qty="1">
+        <div class="product-img" style="background:linear-gradient(135deg,#ede1d3,#bfa888);"><span class="product-badge">1</span></div>
         <div class="product-info">
           <div class="product-name">Belly Fat Blueprint: Lose 10lbs in 30 Days</div>
-          <div class="product-tag">📘 FREE EBOOK</div>
+          <div class="qty-controls">
+            <button class="qty-btn qty-minus" aria-label="Decrease quantity">−</button>
+            <button class="qty-btn qty-plus" aria-label="Increase quantity">+</button>
+          </div>
         </div>
         <div class="product-price">
+          <span class="price-free">FREE</span>
           <span class="price-old">$19.95</span>
-          <span class="price-free">FREE</span>
         </div>
+        <button class="product-remove" aria-label="Remove item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
 
-      <div class="product-row">
-        <div class="product-img" style="background:linear-gradient(135deg,#dde8c8,#a5b87a);"><span class="product-badge">1</span></div>
-        <div class="product-info">
-          <div class="product-name">Smoothie Detox Recipes for Rapid Weight Loss</div>
-          <div class="product-tag">📘 FREE EBOOK</div>
-        </div>
-        <div class="product-price">
-          <span class="price-old">$12.95</span>
-          <span class="price-free">FREE</span>
-        </div>
-      </div>
-
-      <div class="product-row">
-        <div class="product-img" style="background:linear-gradient(135deg,#f0d8b8,#c9a878);"><span class="product-badge">1</span></div>
-        <div class="product-info">
-          <div class="product-name">Metabolism Reset: Burn Fat 24/7</div>
-          <div class="product-tag">📘 FREE EBOOK</div>
-        </div>
-        <div class="product-price">
-          <span class="price-old">$9.95</span>
-          <span class="price-free">FREE</span>
-        </div>
-      </div>
-
-      <div class="scroll-hint">Scroll for more items ↓</div>
     </div>
 
-    <!-- Upsell offers -->
-    <div class="upsell-list" style="margin-top:22px;">
+    <!-- Included With Your Order -->
+    <div class="included-section">
+      <div class="included-title">Included With Your Order</div>
 
-      <div class="upsell-card selected" data-upsell="shipping">
-        <div class="upsell-top">
-          <div class="upsell-checkbox">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-          </div>
-          <div class="upsell-headline">
-            Yes, I want Expedited Shipping for ONLY <span class="price">$4.67</span> and receive my order in 1–3 days.
-          </div>
+      <div class="included-row">
+        <div class="included-icon consult">👨‍⚕️</div>
+        <div class="included-info">
+          <div class="included-name">Doctor Consultation</div>
+          <span class="included-tag">GIFT (-$125)</span>
         </div>
-        <div class="upsell-bottom">
-          <div class="upsell-icon shipping">🚚</div>
-          <div class="upsell-detail">
-            <div class="upsell-detail-title">Expedited Shipping:</div>
-            <div class="upsell-detail-text">Want express shipping with your order? Select the Expedited Shipping option for just $4.67 to get your order delivered in 1–3 days.</div>
-          </div>
+        <div class="included-price">
+          <span class="free">FREE</span>
+          <span class="old">$125.00</span>
         </div>
       </div>
 
-      <div class="upsell-card selected" data-upsell="protection">
-        <div class="upsell-top">
-          <div class="upsell-checkbox">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-          </div>
-          <div class="upsell-headline">
-            Yes, I want to add Full Package Protection for ONLY <span class="price">$4.97</span>.
-          </div>
+      <div class="included-row">
+        <div class="included-icon shipping">📦</div>
+        <div class="included-info">
+          <div class="included-name">Priority Overnight Shipping</div>
+          <span class="included-tag">GIFT (-$25)</span>
         </div>
-        <div class="upsell-bottom">
-          <div class="upsell-icon protection">📦</div>
-          <div class="upsell-detail">
-            <div class="upsell-detail-title">Full Package Protection:</div>
-            <div class="upsell-detail-text">Safeguard your order against damage, loss, or theft during shipping.</div>
-          </div>
+        <div class="included-price">
+          <span class="free">FREE</span>
+          <span class="old">$25.00</span>
         </div>
       </div>
 
-      <div class="upsell-card selected" data-upsell="lifetime">
-        <div class="upsell-top">
-          <div class="upsell-checkbox">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-          </div>
-          <div class="upsell-headline">
-            Yes, I want Extended Lifetime Protection for ONLY <span class="price">$9.97</span>
-          </div>
+      <div class="included-row">
+        <div class="included-icon support">🎧</div>
+        <div class="included-info">
+          <div class="included-name">Unlimited Doctor Support</div>
+          <span class="included-tag">GIFT (-$150)</span>
         </div>
-        <div class="upsell-bottom">
-          <div class="upsell-icon lifetime">🛡️</div>
-          <div class="upsell-detail">
-            <div class="upsell-detail-title">1-Year Extended Lifetime Protection:</div>
-            <div class="upsell-detail-text">If your product shows any material or manufacturing defects within one year, we'll replace it free of charge.</div>
-          </div>
+        <div class="included-price">
+          <span class="free">FREE</span>
+          <span class="old">$150.00</span>
         </div>
       </div>
 
@@ -1218,58 +1471,37 @@
 
     <div class="totals-row">
       <span>Subtotal</span>
-      <span><span class="currency">USD</span>$145.77</span>
-    </div>
-    <div class="totals-row savings">
-      <span>Bonuses &amp; Gifts</span>
-      <span>−$37.90</span>
+      <span><span class="currency">USD</span>$49.00</span>
     </div>
     <div class="totals-row">
-      <span>Shipping</span>
+      <span>Shipping <span style="color:var(--text-mute);font-weight:400;font-size:12px;">· Priority Overnight</span></span>
       <span style="color:var(--brand);font-weight:600;">FREE</span>
-    </div>
-    <div class="totals-row">
-      <span>Estimated taxes</span>
-      <span><span class="currency">USD</span>$0.00</span>
     </div>
 
     <div class="totals-row total">
       <span>Total</span>
-      <span><span class="currency" style="font-size:14px;">USD</span>$107.87</span>
+      <span><span class="currency" style="font-size:14px;">USD</span>$49.00</span>
     </div>
 
-    <!-- Testimonial -->
-    <div class="testimonial">
-      <div class="stars">★★★★★</div>
-      <div class="testimonial-text">"Best decision I've made for my health. Real results in just three weeks — energy is way up and I sleep so much better."</div>
-      <div class="testimonial-author">
-        — Sarah M.
-        <span class="verified-pill">✓ Verified</span>
-      </div>
+    <div class="savings-banner">
+      <span class="savings-icon">🏷️</span>
+      <span>TOTAL SAVINGS</span>
+      <span class="savings-amount">$579.95</span>
     </div>
 
-    <!-- Guarantee -->
-    <div class="guarantee-box">
-      <div class="guarantee-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+    <!-- Delivery Timeline (desktop only - aparece no resumo do pedido) -->
+    <div class="delivery-timeline desktop-only" style="margin-top:22px;">
+      <div class="timeline-title">Your Delivery Timeline: next batch ships <span id="nextBatchTitle">May 17th</span></div>
+      <div class="timeline-desc">Due to high demand, our current batch is sold out. Order now and secure yours from the next shipment.</div>
+      <div class="timeline-bar sold-out">
+        <span class="label-left" id="currentBatchDate">April 16th</span>
+        <span class="label-right">SOLD OUT</span>
       </div>
-      <div class="guarantee-content">
-        <strong>60-Day Money-Back Guarantee</strong>
-        <span>Not satisfied? Full refund — no questions asked.</span>
+      <div class="timeline-bar reserved">
+        <div class="fill" style="width:93%;"></div>
+        <span class="label-left" id="nextBatchDate">May 17th</span>
+        <span class="label-right">93% Reserved</span>
       </div>
-    </div>
-
-    <!-- Security badges -->
-    <div class="security-badges">
-      <span class="badge">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        SSL SECURE
-      </span>
-      <span class="badge">PCI DSS</span>
-      <span class="badge">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-        VERIFIED
-      </span>
     </div>
 
   </div>
@@ -1277,6 +1509,39 @@
 </div>
 
 <script>
+  // Delivery Timeline - datas dinâmicas
+  (function() {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'];
+    const ordinal = (n) => {
+      const s = ['th', 'st', 'nd', 'rd'];
+      const v = n % 100;
+      return n + (s[(v - 20) % 10] || s[v] || s[0]);
+    };
+    const today = new Date();
+    const currentMonth = months[today.getMonth()];
+    const currentDay = ordinal(today.getDate());
+
+    const nextDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+    const nextMonth = months[nextDate.getMonth()];
+    const nextDay = ordinal(nextDate.getDate());
+
+    const cur = document.getElementById('currentBatchDate');
+    const next = document.getElementById('nextBatchDate');
+    const title = document.getElementById('nextBatchTitle');
+    const curM = document.getElementById('currentBatchDateMobile');
+    const nextM = document.getElementById('nextBatchDateMobile');
+    const titleM = document.getElementById('nextBatchTitleMobile');
+    const currentText = currentMonth + ' ' + currentDay;
+    const nextText = nextMonth + ' ' + nextDay;
+    if (cur) cur.textContent = currentText;
+    if (next) next.textContent = nextText;
+    if (title) title.textContent = nextText;
+    if (curM) curM.textContent = currentText;
+    if (nextM) nextM.textContent = nextText;
+    if (titleM) titleM.textContent = nextText;
+  })();
+
   // Promo timer
   (function() {
     const el = document.getElementById('promoTimer');
@@ -1325,6 +1590,36 @@
       document.querySelectorAll('.ship-option').forEach(o => o.classList.remove('selected'));
       opt.classList.add('selected');
     });
+  });
+
+  // Controles de quantidade dos produtos
+  document.querySelectorAll('.product-row').forEach(row => {
+    const minusBtn = row.querySelector('.qty-minus');
+    const plusBtn = row.querySelector('.qty-plus');
+    const badge = row.querySelector('.product-badge');
+    const removeBtn = row.querySelector('.product-remove');
+    if (!minusBtn || !plusBtn) return;
+
+    const update = (delta) => {
+      let n = parseInt(row.dataset.qty || '1', 10);
+      n = Math.max(1, n + delta);
+      row.dataset.qty = n;
+      if (badge) badge.textContent = n;
+      minusBtn.disabled = n <= 1;
+    };
+
+    minusBtn.addEventListener('click', () => update(-1));
+    plusBtn.addEventListener('click', () => update(1));
+    if (parseInt(row.dataset.qty || '1', 10) <= 1) minusBtn.disabled = true;
+
+    if (removeBtn) {
+      removeBtn.addEventListener('click', () => {
+        row.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+        row.style.opacity = '0';
+        row.style.transform = 'translateX(20px)';
+        setTimeout(() => row.remove(), 200);
+      });
+    }
   });
 
   // Upsell cards toggle (já vêm marcados por padrão)
