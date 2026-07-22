@@ -1,0 +1,51 @@
+:root{
+  --green:#084d3a;
+  --green-2:#009370;
+  --ink:#1d2b27;
+  --muted:#5b6b65;
+  --line:#d8e6e0;
+  --bg-soft:#f2fbf6;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:'Satoshi',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink);
+  background:#fff;
+  line-height:1.65;
+}
+a{color:var(--green);}
+.lgl-header{
+  border-bottom:1px solid var(--line);
+}
+.lgl-header__inner{
+  max-width:1100px;margin:0 auto;padding:16px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.lgl-header__brand img{display:block;height:46px;width:auto;}
+.lgl-main{padding:48px 20px 64px;}
+.lgl-container{max-width:860px;margin:0 auto;}
+.lgl-title{
+  font-family:'Oranienbaum',Georgia,serif;
+  font-size:40px;line-height:1.1;margin:0 0 8px;color:var(--green);
+}
+.lgl-subtitle{color:var(--muted);margin:0 0 32px;font-size:17px;}
+.lgl-body h2{font-size:22px;margin:32px 0 10px;color:var(--green);}
+.lgl-body h3{font-size:18px;margin:24px 0 8px;}
+.lgl-body p,.lgl-body li{font-size:15.5px;color:var(--ink);}
+.lgl-body ul{padding-left:20px;}
+.lgl-footer{
+  background:var(--green);color:#fff;padding:48px 20px;margin-top:48px;
+}
+.lgl-footer__container{max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;}
+.lgl-footer__brand-col{flex:1 1 320px;}
+.lgl-footer__brand img{height:48px;width:auto;filter:brightness(0) invert(1);}
+.lgl-footer__disclaimer{font-size:12.5px;color:rgba(255,255,255,.75);margin-top:14px;}
+.lgl-footer__col{flex:0 1 240px;}
+.lgl-footer__title{font-size:15px;margin:0 0 12px;font-weight:700;}
+.lgl-footer__list{list-style:none;padding:0;margin:0;}
+.lgl-footer__list li{margin:0 0 8px;font-size:14px;color:rgba(255,255,255,.85);}
+.lgl-footer__list a{color:rgba(255,255,255,.85);text-decoration:none;}
+.lgl-footer__list a:hover{text-decoration:underline;}
+.lgl-footer__bottom{max-width:1100px;margin:28px auto 0;padding-top:18px;border-top:1px solid rgba(255,255,255,.2);font-size:13px;color:rgba(255,255,255,.7);}
+@media(max-width:640px){.lgl-title{font-size:30px;}}

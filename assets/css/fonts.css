@@ -1,0 +1,71 @@
+/* Mediterra — web fonts
+   Only the families actually used by the storefront: Satoshi (body),
+   Clash Grotesk (headings) and Tenor Sans (logo).
+   Replaces the legacy assets/pages/vsl8/css/fonts.css, which also carried
+   the old Shopify theme CSS and four unused families. */
+
+/* ---------- Satoshi ---------- */
+@font-face{
+  font-family:Satoshi;
+  src:url(https://www.usemediterra.com/cdn/shop/files/Satoshi-Light.woff2) format("woff2"),
+      url(https://www.usemediterra.com/cdn/shop/files/Satoshi-Light.woff) format("woff");
+  font-weight:300;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:Satoshi;
+  src:url(https://www.usemediterra.com/cdn/shop/files/Satoshi-Regular.woff2) format("woff2"),
+      url(https://www.usemediterra.com/cdn/shop/files/Satoshi-Regular.woff) format("woff");
+  font-weight:400;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:Satoshi;
+  src:url(https://www.usemediterra.com/cdn/shop/files/Satoshi-Medium.woff2) format("woff2"),
+      url(https://www.usemediterra.com/cdn/shop/files/Satoshi-Medium.woff) format("woff");
+  font-weight:500;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:Satoshi;
+  src:url(https://www.usemediterra.com/cdn/shop/files/Satoshi-Bold.woff2) format("woff2"),
+      url(https://www.usemediterra.com/cdn/shop/files/Satoshi-Bold.woff) format("woff");
+  font-weight:700;font-style:normal;font-display:swap;
+}
+
+/* ---------- Clash Grotesk ---------- */
+@font-face{
+  font-family:"Clash Grotesk";
+  src:url(https://www.usemediterra.com/cdn/shop/files/ClashGrotesk-Light.woff2) format("woff2"),
+      url(https://www.usemediterra.com/cdn/shop/files/ClashGrotesk-Light.woff) format("woff");
+  font-weight:300;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:"Clash Grotesk";
+  src:url(https://www.usemediterra.com/cdn/shop/files/ClashGrotesk-Regular.woff2) format("woff2"),
+      url(https://www.usemediterra.com/cdn/shop/files/ClashGrotesk-Regular.woff) format("woff");
+  font-weight:400;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:"Clash Grotesk";
+  src:url(https://www.usemediterra.com/cdn/shop/files/ClashGrotesk-Medium.woff2) format("woff2"),
+      url(https://www.usemediterra.com/cdn/shop/files/ClashGrotesk-Medium.woff) format("woff");
+  font-weight:500;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:"Clash Grotesk";
+  src:url(https://www.usemediterra.com/cdn/shop/files/ClashGrotesk-Semibold.woff2) format("woff2"),
+      url(https://www.usemediterra.com/cdn/shop/files/ClashGrotesk-Semibold.woff) format("woff");
+  font-weight:600;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:"Clash Grotesk";
+  src:url(https://www.usemediterra.com/cdn/shop/files/ClashGrotesk-Bold.woff2) format("woff2"),
+      url(https://www.usemediterra.com/cdn/shop/files/ClashGrotesk-Bold.woff) format("woff");
+  font-weight:700;font-style:normal;font-display:swap;
+}
+
+/* ---------- Tenor Sans (logo) ---------- */
+@font-face{
+  font-family:"Tenor Sans";
+  src:url(https://www.usemediterra.com/cdn/shop/files/TenorSans.woff2) format("woff2"),
+      url(https://www.usemediterra.com/cdn/shop/files/TenorSans.woff) format("woff");
+  font-weight:400;font-style:normal;font-display:swap;
+}
